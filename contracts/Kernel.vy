@@ -112,12 +112,15 @@ def _upgradeModule(module: address):
 def _activatePolicy(policy: address):
     assert not Policy(policy).isActive()
 
+    # grant permissions for policy to access restricted module functions
     requests: DynArray[Permissions, 32] = Policy(policy).requestPermissions()
     self._setPolicyPermissions(policy, requests, True)
 
+    # add policy to list of active policies
     self.activePolicies.append(Policy(policy))
     self.getPolicyIndex[Policy(policy)] = len(self.activePolicies) - 1
 
+    # record module dependencies
     dependencies: DynArray[bytes5, 32] = Policy(policy).configureDependencies()
 
     for keycode in dependencies:
@@ -128,7 +131,25 @@ def _activatePolicy(policy: address):
 
 @internal
 def _deactivatePolicy(policy: address):
-    pass
+    assert Policy(policy).isActive()
+
+    # revoke permissions
+    requests: DynArray[Permissions, 32] = Policy(policy).requestPermissions()
+    self._setPolicyPermissions(policy, requests, False)
+
+    index: uint256 = self.getPolicyIndex[Policy(policy)]
+    lastPolicy: Policy = self.activePolicies[len(self.activePolicies) - 1]
+
+    self.activePolicies[index] = lastPolicy
+    self.activePolicies.pop()
+    self.getPolicyIndex[lastPolicy] = index
+
+    # may be unnecessary
+    self.getPolicyIndex[Policy(policy)] = 0
+
+    self._pruneFromDependents(policy)
+
+    Policy(policy).setActiveStatus(False)
 
 @internal
 def _migrateKernel(kernel: address):
