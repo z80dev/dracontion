@@ -89,7 +89,19 @@ def _installModule(module: address):
 
 @internal
 def _upgradeModule(module: address):
-    pass
+    keycode: bytes5 = Module(module).KEYCODE()
+    oldModule: Module = self.getModuleForKeycode[keycode]
+
+    assert not oldModule == empty(Module)
+    assert not oldModule == Module(module)
+
+    self.getKeycodeForModule[oldModule] = 0x0000000000
+    self.getKeycodeForModule[Module(module)] = keycode
+    self.getModuleForKeycode[keycode] = Module(module)
+
+    Module(module).SETUP()
+
+    self._reconfigurePolicies(keycode)
 
 @internal
 def _activatePolicy(policy: address):
@@ -101,4 +113,8 @@ def _deactivatePolicy(policy: address):
 
 @internal
 def _migrateKernel(kernel: address):
+    pass
+
+@internal
+def _reconfigurePolicies(keycode: bytes5):
     pass
