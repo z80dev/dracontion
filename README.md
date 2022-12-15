@@ -7,12 +7,12 @@ a vyper cross-chain state sharing application platform
 
 ## architecture
 
-dracontion roughly follows the approach defined by the [Default Framework](https://github.com/fullyallocated), with a few modifications
+dracontion roughly follows the approach defined by the [Default Framework](https://github.com/fullyallocated/Default), with a few modifications
 
-### Plugins (Final name TBD)
+### plugins (final name TBD)
 
 In addition to modules (encapsulating state) and policies (encapsulating user-facing logic) we introduce the idea of plugins, providing useful functionality to policies while not necessarily being user-facing contracts themselves.
 
-#### Examples
+#### examples
 
 * Bridge Plugins, exposing a convenient API to enabled policies.
