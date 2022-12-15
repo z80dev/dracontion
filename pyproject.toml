@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "dracontion"
+version = "0.1.0"
+description = ""
+authors = ["z80 <z80@ophy.xyz>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.11"
+vyper = "^0.3.7"
+titanoboa = "^0.1.6"
+
+[tool.poetry.dev-dependencies]
+eth-ape = "^0.5.8"
+ape-vyper = "^0.5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
