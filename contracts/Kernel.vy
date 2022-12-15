@@ -1,6 +1,7 @@
 # @version ^0.3.7
 
 import Module as Module
+import Policy as Policy
 
 enum Actions:
      INSTALL_MODULE
@@ -10,6 +11,10 @@ enum Actions:
      CHANGE_EXECUTOR
      CHANGE_ADMIN
      MIGRATE_KERNEL
+
+struct Permissions:
+    keycode: bytes5
+    funcSelector: bytes4
 
 ################################################################
 #                             VARS                             #
@@ -28,18 +33,18 @@ getModuleForKeycode: public(HashMap[bytes5, Module])
 getKeycodeForModule: public(HashMap[Module, bytes5])
 
 # Module dependents data. Manages module dependencies for policies
-moduleDependents: public(HashMap[bytes5, address[32]])
-getDependentIndex: public(HashMap[bytes5, HashMap[address, uint256]])
+moduleDependents: public(HashMap[bytes5, DynArray[Policy, 32]])
+getDependentIndex: public(HashMap[bytes5, HashMap[Policy, uint256]])
 
 # Module <> Policy Permissions. Policy -> Keycode -> Function Selector -> Permission
-modulePermissions: public(HashMap[bytes5, HashMap[address, HashMap[bytes4, bool]]])
+modulePermissions: public(HashMap[bytes5, HashMap[Policy, HashMap[bytes4, bool]]])
 
 # List of all active policies
-activePolicies: public(address[32])
-getPolicyIndex: public(HashMap[address, uint256])
+activePolicies: public(DynArray[Policy, 32])
+getPolicyIndex: public(HashMap[Policy, uint256])
 
 # Policy roles data
-hasRole: public(HashMap[address, HashMap[bytes32, bool]])
+hasRole: public(HashMap[Policy, HashMap[bytes32, bool]])
 isRole: public(HashMap[bytes32, bool])
 
 @external
@@ -105,7 +110,21 @@ def _upgradeModule(module: address):
 
 @internal
 def _activatePolicy(policy: address):
-    pass
+    assert not Policy(policy).isActive()
+
+    requests: DynArray[Permissions, 32] = Policy(policy).requestPermissions()
+    self._setPolicyPermissions(policy, requests, True)
+
+    self.activePolicies.append(Policy(policy))
+    self.getPolicyIndex[Policy(policy)] = len(self.activePolicies) - 1
+
+    dependencies: DynArray[bytes5, 32] = Policy(policy).configureDependencies()
+
+    for keycode in dependencies:
+       self.moduleDependents[keycode].append(Policy(policy))
+       self.getDependentIndex[keycode][Policy(policy)] = len(self.moduleDependents[keycode]) - 1
+
+    Policy(policy).setActiveStatus(True)
 
 @internal
 def _deactivatePolicy(policy: address):
@@ -117,4 +136,8 @@ def _migrateKernel(kernel: address):
 
 @internal
 def _reconfigurePolicies(keycode: bytes5):
+    pass
+
+@internal
+def _setPolicyPermissions(policy: address, requests: DynArray[Permissions, 32], enabled: bool):
     pass
