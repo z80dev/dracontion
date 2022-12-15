@@ -9,6 +9,16 @@ a vyper cross-chain state sharing application platform
 
 dracontion roughly follows the approach defined by the [Default Framework](https://github.com/fullyallocated/Default), with a few modifications
 
+application state will be distributed across appropriate module contracts
+
+policy contracts will expose an interface for effecting state changes
+
+plugins will enable interconnected procedures across dracontion instances
+
+these instances can exist on different chains
+
+you can think of dracontion like an integrated app store for on-chain applications which can all communicate with each other
+
 ### plugins (final name TBD)
 
 In addition to modules (encapsulating state) and policies (encapsulating user-facing logic) we introduce the idea of plugins, providing useful functionality to policies while not necessarily being user-facing contracts themselves.
