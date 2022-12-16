@@ -4,15 +4,15 @@ struct Permissions:
 
 @external
 def isActive() -> bool:
-    pass
+    return False
 
 @external
 def requestPermissions() -> DynArray[Permissions, 32]:
-    pass
+    return []
 
 @external
 def configureDependencies() -> DynArray[bytes5, 32]:
-    pass
+    return []
 
 @external
 def setActiveStatus(status: bool):

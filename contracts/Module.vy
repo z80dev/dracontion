@@ -1,7 +1,7 @@
 @pure
 @external
 def KEYCODE() -> bytes5:
-    pass
+    return 0x0000000000
 
 @external
 def SETUP():
