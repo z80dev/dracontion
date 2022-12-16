@@ -188,14 +188,14 @@ def _pruneFromDependents(policy: address):
 
         self.getDependentIndex[keycode][lastPolicy] = origIndex
 
-@public
-def grantRole(role: Role, addr: address):
+@external
+def grantRole(role: bytes32, addr: address):
     self._onlyAdmin()
-    assert not self.hasRole[addr][role]
-    self.hasRole[addr][role] = True
+    assert not self.hasRole[Policy(addr)][role]
+    self.hasRole[Policy(addr)][role] = True
 
-@public
-def revokeRole(role: Role, addr: address):
+@external
+def revokeRole(role: bytes32, addr: address):
     self._onlyAdmin()
-    assert self.hasRole[addr][role]
-    self.hasRole[addr][role] = False
+    assert self.hasRole[Policy(addr)][role]
+    self.hasRole[Policy(addr)][role] = False
