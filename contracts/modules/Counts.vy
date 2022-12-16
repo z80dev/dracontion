@@ -9,6 +9,10 @@ keycode: constant(bytes5) = 0x434F554EF4 # b"COUNT"
 counts: public(HashMap[address, uint256])
 
 @external
+def __init__(kernel: address):
+    self.kernel = kernel
+
+@external
 def SETUP():
     pass
 
