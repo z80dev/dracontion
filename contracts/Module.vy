@@ -6,3 +6,7 @@ def KEYCODE() -> bytes5:
 @external
 def SETUP():
     pass
+
+@external
+def changeKernel(kernel: address):
+    pass

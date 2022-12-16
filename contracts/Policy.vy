@@ -17,3 +17,7 @@ def configureDependencies() -> DynArray[bytes5, 32]:
 @external
 def setActiveStatus(status: bool):
     pass
+
+@external
+def changeKernel(kernel: address):
+    pass

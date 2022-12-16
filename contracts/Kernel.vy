@@ -151,14 +151,51 @@ def _deactivatePolicy(policy: address):
 
     Policy(policy).setActiveStatus(False)
 
+# WARNING: ACTION WILL BRICK THIS KERNEL. All functionality will move to the new kernel
+# New kernel must add in all of the modules and policies via executeAction
+# NOTE: Data does not get cleared from this kernel
 @internal
 def _migrateKernel(kernel: address):
-    pass
+    for keycode in self.allKeycodes:
+        module: Module = self.getModuleForKeycode[keycode]
+        module.changeKernel(kernel)
+
+    for policy in self.activePolicies:
+        # Deactivate before changing kernel
+        policy.setActiveStatus(False)
+        policy.changeKernel(kernel)
 
 @internal
 def _reconfigurePolicies(keycode: bytes5):
-    pass
+    dependents: DynArray[Policy, 32] = self.moduleDependents[keycode]
+    for dep in dependents:
+        dep.configureDependencies()
 
 @internal
 def _setPolicyPermissions(policy: address, requests: DynArray[Permissions, 32], enabled: bool):
-    pass
+    for req in requests:
+        self.modulePermissions[req.keycode][Policy(policy)][req.funcSelector] = enabled
+
+@internal
+def _pruneFromDependents(policy: address):
+    dependencies: DynArray[bytes5, 32] = Policy(policy).configureDependencies()
+    for keycode in dependencies:
+        origIndex: uint256 = self.getDependentIndex[keycode][Policy(policy)]
+        lastPolicy: Policy = self.moduleDependents[keycode][len(self.moduleDependents[keycode]) - 1]
+
+        self.moduleDependents[keycode][origIndex] = lastPolicy
+        self.moduleDependents[keycode].pop()
+
+        self.getDependentIndex[keycode][lastPolicy] = origIndex
+
+@public
+def grantRole(role: Role, addr: address):
+    self._onlyAdmin()
+    assert not self.hasRole[addr][role]
+    self.hasRole[addr][role] = True
+
+@public
+def revokeRole(role: Role, addr: address):
+    self._onlyAdmin()
+    assert self.hasRole[addr][role]
+    self.hasRole[addr][role] = False
