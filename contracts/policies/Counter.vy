@@ -9,6 +9,10 @@ func_sig: constant(bytes4) = 0x6526b04a # increaseCount(address)
 isActive: public(bool)
 
 @external
+def __init__(kernel: address):
+    self.kernel = kernel
+
+@external
 def configureDependencies() -> DynArray[bytes5, 32]:
     self._onlyKernel()
     return [convert(b"COUNT", bytes5)]
