@@ -9,18 +9,26 @@ keycode: constant(bytes5) = 0x434F554EF4 # b"COUNT"
 counts: public(HashMap[address, uint256])
 
 @external
+def SETUP():
+    pass
+
+@external
 def increaseCount(addr: address):
-    func: bytes4 = convert(slice(msg.data, 0, 4), bytes4)
-    assert Kernel(self.kernel).modulePermissions(keycode, Policy(msg.sender), func)
+    self._checkPolicyAuth()
     self.counts[addr] = self.counts[addr] + 1
+
+################################################################
+#                      MODULE BOILERPLATE                      #
+################################################################
 
 @external
 def KEYCODE() -> bytes5:
     return keycode
 
-@external
-def SETUP():
-    pass
+@internal
+def _checkPolicyAuth():
+    func: bytes4 = convert(slice(msg.data, 0, 4), bytes4)
+    assert Kernel(self.kernel).modulePermissions(keycode, Policy(msg.sender), func)
 
 @external
 def changeKernel(kernel: address):
