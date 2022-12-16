@@ -30,6 +30,10 @@ def _checkPolicyAuth():
     func: bytes4 = convert(slice(msg.data, 0, 4), bytes4)
     assert Kernel(self.kernel).modulePermissions(keycode, Policy(msg.sender), func)
 
+@internal
+def _onlyKernel():
+    assert msg.sender == self.kernel
+
 @external
 def changeKernel(kernel: address):
     assert msg.sender == self.kernel
