@@ -5,9 +5,9 @@
 
 pragma solidity >=0.8.7 <0.9.0;
 
-import "../ERC721X/MinimalOwnable.sol";
-import "../ERC721X/MinimalOwnableInitializable.sol";
-import "../ERC721X/ERC721XInitializable.sol";
+import "@ERC721X/MinimalOwnable.sol";
+import "@ERC721X/MinimalOwnableInitializable.sol";
+import "@ERC721X/ERC721XInitializable.sol";
 import "../interfaces/IERC721XManager.sol";
 import "@openzeppelin/proxy/Clones.sol";
 import "@openzeppelin/interfaces/IERC20.sol";
@@ -65,7 +65,7 @@ contract ERC721XManager is IERC721XManager, MinimalOwnable, Module {
     event MintedItem(address collection, uint256 tokenId, address recipient);
 
     constructor(KernelSol kernel_) MinimalOwnable() Module(kernel_) {
-        // erc721xImplementation = address(new ERC721XInitializable());
+        erc721xImplementation = address(new ERC721XInitializable());
         royaltyReceiverImplementation = address(new RoyaltyReceiver());
     }
 
@@ -83,7 +83,7 @@ contract ERC721XManager is IERC721XManager, MinimalOwnable, Module {
         string memory tokenURI,
         address recipient
     ) external {
-        // ERC721XInitializable(collection).mint(recipient, tokenId, tokenURI);
+        ERC721XInitializable(collection).mint(recipient, tokenId, tokenURI);
         emit MintedItem(collection, tokenId, recipient);
     }
 
@@ -113,15 +113,15 @@ contract ERC721XManager is IERC721XManager, MinimalOwnable, Module {
         uint96 feeNumerator
     ) external permissioned returns (address) {
         bytes32 salt = keccak256(abi.encodePacked(chainId, originAddress));
-        // ERC721XInitializable nft = ERC721XInitializable(
-            // Clones.cloneDeterministic(erc721xImplementation, salt)
-        // );
+        ERC721XInitializable nft = ERC721XInitializable(
+            Clones.cloneDeterministic(erc721xImplementation, salt)
+        );
         RoyaltyReceiver receiver = RoyaltyReceiver(
             Clones.cloneDeterministic(royaltyReceiverImplementation, salt)
         );
         receiver.initialize(originAddress, feeRecipient, chainId);
         receiver.setOwner(_owner);
-        // nft.initialize(name, symbol, originAddress, chainId, feeNumerator, address(receiver));
+        nft.initialize(name, symbol, originAddress, chainId, feeNumerator, address(receiver));
         emit MintedCollection(chainId, originAddress, name);
         return address(0x0);
     }

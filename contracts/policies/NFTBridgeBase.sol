@@ -2,7 +2,7 @@
 
 pragma solidity >=0.8.7 <0.9.0;
 
-import "../ERC721X/ERC721X.sol";
+import "@ERC721X/ERC721X.sol";
 
 import "../ERC721.sol";
 

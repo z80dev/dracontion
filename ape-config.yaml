@@ -7,6 +7,9 @@ dependencies:
   - name: open-zeppelin-upgradeable
     github: OpenZeppelin/openzeppelin-contracts-upgradeable
     version: 4.8.1
+  - name: ERC721X
+    github: OphiuchusDAO/ERC721X
+    branch: ape
   - name: layer-zero
     github: LayerZero-Labs/solidity-examples
     branch: main
@@ -16,3 +19,4 @@ solidity:
     - "@openzeppelin=open-zeppelin/4.4.2"
     - "@ozu=open-zeppelin-upgradeable/4.8.1"
     - "solidity-examples=layer-zero/main"
+    - "@ERC721X=ERC721X/ape"
