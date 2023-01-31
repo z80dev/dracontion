@@ -1,7 +1,7 @@
 # dracontion
 a vyper cross-chain state sharing application platform
 
-dracontion instances can contain various modules as well as communicate with other dracontion instances. these instances may be spread across chains.
+dracontion instances can contain various components as well as communicate with other dracontion instances. these instances may be spread across chains. These components may be written in Vyper, Solidity, Huff, Dasy, or any other EVM language.
 
 > dev: what is an ancient greek word that roughly translates to "bridge made of serpents"?
 
