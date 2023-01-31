@@ -44,7 +44,7 @@ contract LZNFTBridge is NonblockingLzApp, NFTBridgeBase {
         uint256 relayerFee
     ) internal {
         bytes memory payload = abi.encode(details);
-        _lzSend(dstChainId, payload, payable(details.owner), address(0x0), abi.encodePacked(uint16(1), uint256(800000)), 0);
+        _lzSend(dstChainId, payload, payable(details.owner), address(0x0), abi.encodePacked(uint16(1), uint256(800000)), msg.value);
     }
 
 }
