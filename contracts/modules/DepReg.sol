@@ -2,11 +2,6 @@
 
 pragma solidity >=0.8.7 <0.9.0;
 
-// import "@solmate/tokens/ERC721.sol";
-// import "../interfaces/IDepositRegistry.sol";
-// import "ERC721X/ERC721XInitializable.sol";
-// import "@Default/Kernel.sol";
-
 import "../KernelHelper.sol";
 import "../ERC721.sol";
 

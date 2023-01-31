@@ -1,20 +1,4 @@
-# External Interfaces
-interface Kernel:
-    def executeAction(action: Actions, target: address): nonpayable
-    def grantRole(role: bytes32, addr: address): nonpayable
-    def revokeRole(role: bytes32, addr: address): nonpayable
-    def executor() -> address: view
-    def admin() -> address: view
-    def allKeycodes(arg0: uint256) -> bytes5: view
-    def getModuleForKeycode(arg0: bytes5) -> address: view
-    def getKeycodeForModule(arg0: Module) -> bytes5: view
-    def moduleDependents(arg0: bytes5, arg1: uint256) -> address: view
-    def getDependentIndex(arg0: bytes5, arg1: Policy) -> uint256: view
-    def modulePermissions(arg0: bytes5, arg1: Policy, arg2: bytes4) -> bool: view
-    def activePolicies(arg0: uint256) -> address: view
-    def getPolicyIndex(arg0: Policy) -> uint256: view
-    def hasRole(arg0: Policy, arg1: bytes32) -> bool: view
-    def isRole(arg0: bytes32) -> bool: view
+import Kernel as Kernel
 
 interface Module:
     def KEYCODE() -> bytes5: pure

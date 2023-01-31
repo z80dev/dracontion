@@ -72,6 +72,7 @@ def _onlyAdmin():
 def _onlyExecutor():
     assert msg.sender == self.executor
 
+# TODO: Action for installing plugin (currently they take module path)
 @external
 def executeAction(action: Actions, target: address):
     self._onlyExecutor()
