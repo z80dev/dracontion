@@ -1,0 +1,3 @@
+[submodule "lib/Default"]
+	path = lib/Default
+	url = git@github.com:fullyallocated/Default.git

@@ -1,1 +1,18 @@
 name: dracontion
+
+dependencies:
+  - name: open-zeppelin
+    github: OpenZeppelin/openzeppelin-contracts
+    version: 4.4.2
+  - name: open-zeppelin-upgradeable
+    github: OpenZeppelin/openzeppelin-contracts-upgradeable
+    version: 4.8.1
+  - name: layer-zero
+    github: LayerZero-Labs/solidity-examples
+    branch: main
+
+solidity:
+  import_remapping:
+    - "@openzeppelin=open-zeppelin/4.4.2"
+    - "@ozu=open-zeppelin-upgradeable/4.8.1"
+    - "solidity-examples=layer-zero/main"

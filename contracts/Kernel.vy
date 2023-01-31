@@ -1,7 +1,19 @@
 # @version ^0.3.7
 
-import Module as Module
-import Policy as Policy
+# External Interfaces
+interface Module:
+    def KEYCODE() -> bytes5: pure
+    def SETUP(): nonpayable
+    def changeKernel(kernel: address): nonpayable
+
+interface Policy:
+    def isActive() -> bool: nonpayable
+    def requestPermissions() -> DynArray[Permissions, 32]: nonpayable
+    def configureDependencies() -> DynArray[bytes5, 32]: nonpayable
+    def setActiveStatus(status: bool): nonpayable
+    def changeKernel(kernel: address): nonpayable
+
+
 
 enum Actions:
      INSTALL_MODULE
@@ -64,26 +76,26 @@ def _onlyExecutor():
 def executeAction(action: Actions, target: address):
     self._onlyExecutor()
     if action == Actions.INSTALL_MODULE:
-       self._installModule(target)
+        self._installModule(target)
     elif action == Actions.UPGRADE_MODULE:
-       self._upgradeModule(target)
+        self._upgradeModule(target)
     elif action == Actions.ACTIVATE_POLICY:
-       self._activatePolicy(target)
+        self._activatePolicy(target)
     elif action == Actions.DEACTIVATE_POLICY:
-       self._deactivatePolicy(target)
+        self._deactivatePolicy(target)
     elif action == Actions.MIGRATE_KERNEL:
-       self._migrateKernel(target)
+        self._migrateKernel(target)
     elif action == Actions.CHANGE_EXECUTOR:
-       self.executor = target
+        self.executor = target
     elif action == Actions.CHANGE_ADMIN:
-       self.admin = target
+        self.admin = target
 
 @internal
 def _installModule(module: address):
     keycode: bytes5 = Module(module).KEYCODE()
     oldModule: Module = self.getModuleForKeycode[keycode]
 
-    assert self.getModuleForKeycode[keycode] == empty(Module)
+    assert self.getModuleForKeycode[keycode] == empty(Module), "module installed"
 
     self.getModuleForKeycode[keycode] = Module(module)
     self.getKeycodeForModule[Module(module)] = keycode
